@@ -2,7 +2,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.1
-Release:	0.1
+Release:	0.2
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -81,6 +81,15 @@ elif [ -d /etc/httpd/httpd.conf ]; then
 	fi
 fi
 
+cat <<_EOF2_
+IMPORTANT:
+If you are installing for the first time, you must now
+create the Kronolith database tables. Look into directory
+/usr/share/doc/%{name}-%{version}/scripts
+to find out how to do this for your database.
+_EOF2_
+
+
 %preun
 if [ "$1" = "0" ]; then
 	umask 027
@@ -98,7 +107,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README docs/* 
+%doc README docs/* scripts/*
 %dir %{hordedir}/%{name}
 %attr(640,root,http) %{hordedir}/%{name}/*.php
 %attr(750,root,http) %{hordedir}/%{name}/lib
