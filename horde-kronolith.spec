@@ -2,7 +2,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.11
+Release:	0.12
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -88,6 +88,10 @@ install %{SOURCE1} 		$RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 rm -rf $RPM_BUILD_ROOT
 
 %post
+if [ ! -f %{_sysconfdir}/%{name}/conf.php.bak ]; then
+	install /dev/null -o root -g http -m660 %{_sysconfdir}/%{name}/conf.php.bak
+fi
+
 # apache1
 if [ -d %{_apache1dir}/conf.d ]; then
 	ln -sf %{_sysconfdir}/apache-%{name}.conf %{_apache1dir}/conf.d/99_%{name}.conf
@@ -137,7 +141,7 @@ fi
 %attr(750,root,http) %dir %{_sysconfdir}/%{name}
 %attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{name}.conf
 %attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/conf.php
-%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/conf.php.bak
+%attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/%{name}/conf.php.bak
 %attr(640,root,http) %config(noreplace) %{_sysconfdir}/%{name}/[!c]*.php
 %attr(640,root,http) %{_sysconfdir}/%{name}/*.xml
 
