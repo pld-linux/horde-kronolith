@@ -2,7 +2,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.10
+Release:	0.11
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -134,11 +134,11 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README docs/* scripts/*
-%attr(770,root,http) %dir %{_sysconfdir}/%{name}
+%attr(750,root,http) %dir %{_sysconfdir}/%{name}
 %attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{name}.conf
 %attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/conf.php
+%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/conf.php.bak
 %attr(640,root,http) %config(noreplace) %{_sysconfdir}/%{name}/[!c]*.php
-%ghost %{_sysconfdir}/%{name}/*.php.bak
 %attr(640,root,http) %{_sysconfdir}/%{name}/*.xml
 
 %dir %{_appdir}
