@@ -3,7 +3,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.16
+Release:	1
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
