@@ -2,7 +2,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.5
+Release:	0.7
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -10,8 +10,8 @@ Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
 # Source0-md5:	876acd83dda5a0fd786989247131c678
 Source1:	%{name}.conf
 URL:		http://www.horde.org/kronolith/
-PreReq:		apache
 BuildRequires:	rpmbuild(macros) >= 1.177
+Requires:	apache >= 1.3.33-2
 Requires:	horde >= 3.0
 Requires:	php-xml >= 4.1.0
 BuildArch:	noarch
@@ -67,8 +67,9 @@ cp -pR	*.php			$RPM_BUILD_ROOT%{_appdir}
 for i in config/*.dist; do
 	cp -p $i $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/$(basename $i .dist)
 done
-cp -pR  config/*.xml            $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 echo "<?php ?>" > 		$RPM_BUILD_ROOT%{_sysconfdir}/%{name}/conf.php
+cp -pR  config/*.xml            $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/conf.php.bak
 
 cp -pR  lib/*                   $RPM_BUILD_ROOT%{_appdir}/lib
 cp -pR  locale/*                $RPM_BUILD_ROOT%{_appdir}/locale
@@ -130,7 +131,9 @@ fi
 %doc README docs/* scripts/*
 %attr(770,root,http) %dir %{_sysconfdir}/%{name}
 %attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{name}.conf
-%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/*.php
+%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/conf.php
+%attr(640,root,http) %config(noreplace) %{_sysconfdir}/%{name}/[^c]*.php
+%ghost %{_sysconfdir}/%{name}/*.php.bak
 %attr(640,root,http) %{_sysconfdir}/%{name}/*.xml
 
 %dir %{_appdir}
