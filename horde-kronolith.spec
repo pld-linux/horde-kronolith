@@ -2,7 +2,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.1
+Release:	0.5
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -11,15 +11,17 @@ Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
 Source1:	%{name}.conf
 URL:		http://www.horde.org/kronolith/
 PreReq:		apache
-Requires(post):	grep
+BuildRequires:	rpmbuild(macros) >= 1.177
 Requires:	horde >= 3.0
 Requires:	php-xml >= 4.1.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		apachedir	/etc/httpd
 %define		hordedir	/usr/share/horde
-%define		confdir		/etc/horde.org
+%define		_appdir		%{hordedir}/%{name}
+%define		_sysconfdir	/etc/horde.org
+%define		_apache1dir	/etc/apache
+%define		_apache2dir	/etc/httpd
 
 %description
 Kronolith is the Horde calendar application. It provides a stable and
@@ -58,80 +60,83 @@ PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{apachedir},%{confdir}/kronolith} \
-	$RPM_BUILD_ROOT%{hordedir}/kronolith/{lib,locale,templates,themes,scripts}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
+	$RPM_BUILD_ROOT%{_appdir}/{lib,locale,templates,themes,scripts}
 
-cp -pR	*.php			$RPM_BUILD_ROOT%{hordedir}/kronolith
-cp -pR  config/*.dist           $RPM_BUILD_ROOT%{confdir}/kronolith
-cp -pR  config/*.xml            $RPM_BUILD_ROOT%{confdir}/kronolith
-echo "<?php ?>" > 		$RPM_BUILD_ROOT%{confdir}/kronolith/conf.php
-cp -pR  lib/*                   $RPM_BUILD_ROOT%{hordedir}/kronolith/lib
-cp -pR  locale/*                $RPM_BUILD_ROOT%{hordedir}/kronolith/locale
-cp -pR  templates/*             $RPM_BUILD_ROOT%{hordedir}/kronolith/templates
-cp -pR  themes/*                $RPM_BUILD_ROOT%{hordedir}/kronolith/themes
+cp -pR	*.php			$RPM_BUILD_ROOT%{_appdir}
+for i in config/*.dist; do
+	cp -p $i $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/$(basename $i .dist)
+done
+cp -pR  config/*.xml            $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+echo "<?php ?>" > 		$RPM_BUILD_ROOT%{_sysconfdir}/%{name}/conf.php
 
-cp -p   config/.htaccess        $RPM_BUILD_ROOT%{confdir}/kronolith
+cp -pR  lib/*                   $RPM_BUILD_ROOT%{_appdir}/lib
+cp -pR  locale/*                $RPM_BUILD_ROOT%{_appdir}/locale
+cp -pR  templates/*             $RPM_BUILD_ROOT%{_appdir}/templates
+cp -pR  themes/*                $RPM_BUILD_ROOT%{_appdir}/themes
 
-install %{SOURCE1} 		$RPM_BUILD_ROOT%{apachedir}
-ln -fs %{confdir}/%{name} 	$RPM_BUILD_ROOT%{hordedir}/%{name}/config
-
-# bit unclean..
-cd $RPM_BUILD_ROOT%{confdir}/kronolith
-for i in *.dist; do cp $i `basename $i .dist`; done
+ln -s %{_sysconfdir}/%{name} 	$RPM_BUILD_ROOT%{_appdir}/config
+install %{SOURCE1} 		$RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*%{name}.conf" /etc/httpd/httpd.conf; then
-	echo "Include /etc/httpd/%{name}.conf" >> /etc/httpd/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl restart 1>&2
+# apache1
+if [ -d %{_apache1dir}/conf.d ]; then
+	ln -sf %{_sysconfdir}/apache-%{name}.conf %{_apache1dir}/conf.d/99_%{name}.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
 	fi
-elif [ -d /etc/httpd/httpd.conf ]; then
-	ln -sf /etc/httpd/%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
+fi
+# apache2
+if [ -d %{_apache2dir}/httpd.conf ]; then
+	ln -sf %{_sysconfdir}/apache-%{name}.conf %{_apache2dir}/httpd.conf/99_%{name}.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl restart 1>&2
+		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
 
-cat <<_EOF2_
+if [ "$1" = 1 ]; then
+%banner %{name} -e <<EOF
 IMPORTANT:
 If you are installing for the first time, you must now
 create the Kronolith database tables. Look into directory
 /usr/share/doc/%{name}-%{version}/scripts
 to find out how to do this for your database.
-_EOF2_
+EOF
+fi
 
-%preun
+%postun
 if [ "$1" = "0" ]; then
-	umask 027
-	if [ -d /etc/httpd/httpd.conf ]; then
-	    rm -f /etc/httpd/httpd.conf/99_%{name}.conf
-	else
-		grep -v "^Include.*%{name}.conf" /etc/httpd/httpd.conf > \
-			/etc/httpd/httpd.conf.tmp
-		mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+	# apache1
+	if [ -d %{_apache1dir}/conf.d ]; then
+		rm -f %{_apache1dir}/conf.d/99_%{name}.conf
+		if [ -f /var/lock/subsys/apache ]; then
+			/etc/rc.d/init.d/apache restart 1>&2
+		fi
 	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-	    /usr/sbin/apachectl restart 1>&2
+	# apache2
+	if [ -d %{_apache2dir}/httpd.conf ]; then
+		rm -f %{_apache2dir}/httpd.conf/99_%{name}.conf
+		if [ -f /var/lock/subsys/httpd ]; then
+			/etc/rc.d/init.d/httpd restart 1>&2
+		fi
 	fi
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc README docs/* scripts/*
-%dir %{hordedir}/%{name}
-%attr(640,root,http) %{hordedir}/%{name}/*.php
-%attr(750,root,http) %{hordedir}/%{name}/lib
-%attr(750,root,http) %{hordedir}/%{name}/locale
-%attr(750,root,http) %{hordedir}/%{name}/templates
-%attr(750,root,http) %{hordedir}/%{name}/themes
+%attr(770,root,http) %dir %{_sysconfdir}/%{name}
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{name}.conf
+%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{name}/*.php
+%attr(640,root,http) %{_sysconfdir}/%{name}/*.xml
 
-%attr(750,root,http) %dir %{confdir}/%{name}
-%dir %{hordedir}/%{name}/config
-%attr(640,root,http) %{confdir}/%{name}/*.dist
-%attr(640,root,http) %{confdir}/%{name}/.htaccess
-%attr(640,root,http) %config(noreplace) %{apachedir}/%{name}.conf
-%attr(660,root,http) %config(noreplace) %{confdir}/%{name}/*.php
-%attr(640,root,http) %config(noreplace) %{confdir}/%{name}/*.xml
+%dir %{_appdir}
+%{_appdir}/*.php
+%{_appdir}/lib
+%{_appdir}/locale
+%{_appdir}/templates
+%{_appdir}/themes
+%{_appdir}/config
