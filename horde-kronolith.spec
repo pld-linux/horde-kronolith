@@ -6,7 +6,6 @@ Release:	0.2
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
-Requires:	%{name} = %{version}-%{release}
 Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
 # Source0-md5:	c8c5b26095a82305579e838875f97b8f
 Source1:	%{name}.conf
@@ -37,7 +36,22 @@ work with any backend, but right now we provide SQL (abstracted to
 support most databases, including MySQL, PostgreSQL, Oracle, and MSSQL
 via PEAR DB), MCAL, and Kolab backend libraries.
 
-#%description -l pl
+%description -l pl
+Kronolith to kalendarz bêd±cy aplikacj± dla Horde. Dostarcza stabilny
+system kalendarza o du¿ych mo¿liwo¶ciach dla ka¿dego u¿ytkownika Horde
+wraz ze zintegrowanymi mo¿liwo¶ciami wspó³pracy/planowania.
+Intensywnie wykorzystuje szkielet Horde w celu integracji z innymi
+aplikacjami.
+
+Jak na razie Kronolith implementuje solidny, samodzielny system
+kalendarza, pozwalaj±cy na powtarzanie zdarzeñ, zdarzenia codzienne,
+w³asne pola, s³owa kluczowe, wspó³dzielone kalendarze, obs³ugê
+iCalendar, generowanie informacji o wolnym i zajêtym czasie oraz
+zarz±dzanie wieloma u¿ytkownikami poprzez uwierzytelnianie Horde. API
+kalendarza u¿ywane przez Kronolith jest abstrakcyjne, tak ¿e mo¿e
+dzia³aæ z dowolnym backendem, ale aktualnie dostarczane s± biblioteki
+backendów SQL (jako abstrakcja do obs³ugi wiêkszo¶ci baz, w tym MySQL,
+PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
 %setup -q -n %{name}-h3-%{version}
@@ -88,7 +102,6 @@ create the Kronolith database tables. Look into directory
 /usr/share/doc/%{name}-%{version}/scripts
 to find out how to do this for your database.
 _EOF2_
-
 
 %preun
 if [ "$1" = "0" ]; then
