@@ -112,7 +112,7 @@ if [ "$1" = 1 ]; then
 IMPORTANT:
 If you are installing for the first time, you must now
 create the Kronolith database tables. Look into directory
-/usr/share/doc/%{name}-%{version}/scripts
+/usr/share/doc/%{name}-%{version}/sql
 to find out how to do this for your database.
 EOF
 fi
