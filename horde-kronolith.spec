@@ -1,8 +1,9 @@
+%include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.2
-Release:	0.12
+Release:	0.14
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
@@ -19,6 +20,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # horde accesses it directly in help->about
 %define		_noautocompressdoc  CREDITS
+%define		_noautoreq	'pear(Horde.*)'
 
 %define		hordedir	/usr/share/horde
 %define		_appdir		%{hordedir}/%{name}
