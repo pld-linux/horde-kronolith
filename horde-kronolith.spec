@@ -2,13 +2,13 @@
 Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
-Version:	2.0.2
-Release:	1
+Version:	2.0.3
+Release:	0.1
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/Mail
 Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
-# Source0-md5:	876acd83dda5a0fd786989247131c678
+# Source0-md5:	a17f41f0724acec5e561cfd7300759bd
 Source1:	%{name}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpmbuild(macros) >= 1.177
