@@ -3,7 +3,7 @@ Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
 Version:	2.0.3
-Release:	0.1
+Release:	0.2
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/WWW
@@ -11,7 +11,7 @@ Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
 # Source0-md5:	a17f41f0724acec5e561cfd7300759bd
 Source1:	%{name}.conf
 URL:		http://www.horde.org/kronolith/
-BuildRequires:	rpmbuild(macros) >= 1.177
+BuildRequires:	rpmbuild(macros) >= 1.226
 Requires:	apache >= 1.3.33-2
 Requires:	apache(mod_access)
 Requires:	horde >= 3.0
@@ -26,8 +26,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		hordedir	/usr/share/horde
 %define		_appdir		%{hordedir}/%{name}
 %define		_sysconfdir	/etc/horde.org
-%define		_apache1dir	/etc/apache
-%define		_apache2dir	/etc/httpd
 
 %description
 Kronolith is the Horde calendar application. It provides a stable and
@@ -95,21 +93,6 @@ if [ ! -f %{_sysconfdir}/%{name}/conf.php.bak ]; then
 	install /dev/null -o root -g http -m660 %{_sysconfdir}/%{name}/conf.php.bak
 fi
 
-# apache1
-if [ -d %{_apache1dir}/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf %{_apache1dir}/conf.d/99_%{name}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
-fi
-# apache2
-if [ -d %{_apache2dir}/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf %{_apache2dir}/httpd.conf/99_%{name}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
 if [ "$1" = 1 ]; then
 %banner %{name} -e <<EOF
 IMPORTANT:
@@ -120,23 +103,17 @@ to find out how to do this for your database.
 EOF
 fi
 
-%postun
-if [ "$1" = "0" ]; then
-	# apache1
-	if [ -d %{_apache1dir}/conf.d ]; then
-		rm -f %{_apache1dir}/conf.d/99_%{name}.conf
-		if [ -f /var/lock/subsys/apache ]; then
-			/etc/rc.d/init.d/apache restart 1>&2
-		fi
-	fi
-	# apache2
-	if [ -d %{_apache2dir}/httpd.conf ]; then
-		rm -f %{_apache2dir}/httpd.conf/99_%{name}.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			/etc/rc.d/init.d/httpd restart 1>&2
-		fi
-	fi
-fi
+%triggerin -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{name}.conf
+
+%triggerun -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1
+
+%triggerin -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{name}.conf
+
+%triggerun -- apache >= 2.0.0
+%apache_config_uninstall -v 2
 
 %files
 %defattr(644,root,root,755)
