@@ -1,14 +1,16 @@
+
+%define		_rc	rc1
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for HORDE
 Summary(pl):	Kronolith - kalendarz dla HORDE
 Name:		kronolith
-Version:	2.0.3
-Release:	1
+Version:	2.0.4
+Release:	0.%{_rc}.1
 License:	LGPL
 Vendor:		The Horde Project
 Group:		Applications/WWW
-Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}.tar.gz
-# Source0-md5:	a17f41f0724acec5e561cfd7300759bd
+Source0:	http://ftp.horde.org/pub/kronolith/%{name}-h3-%{version}-%{_rc}.tar.gz
+# Source0-md5:	592cb698683e449a6182e0c0b3689543
 Source1:	%{name}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpmbuild(macros) >= 1.226
@@ -60,7 +62,7 @@ backendów SQL (jako abstrakcja do obs³ugi wiêkszo¶ci baz, w tym MySQL,
 PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
-%setup -q -n %{name}-h3-%{version}
+%setup -q -n %{name}-h3-%{version}-%{_rc}
 
 %install
 rm -rf $RPM_BUILD_ROOT
