@@ -3,15 +3,13 @@
 %define	_rc		rc1
 %define	_rel	0.1
 #
-%define		_rc	rc1
 %include	/usr/lib/rpm/macros.php
-Summary:	Kronolith - calendar for HORDE
-Summary(pl):	Kronolith - kalendarz dla HORDE
-Name:		kronolith
+Summary:	Kronolith - calendar for Horde
+Summary(pl):	Kronolith - kalendarz dla Horde
+Name:		%{_hordeapp}
 Version:	2.0.4
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	LGPL
-Vendor:		The Horde Project
 Group:		Applications/WWW
 #Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}.tar.gz
 Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
@@ -33,8 +31,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	'pear(Horde.*)'
 
 %define		hordedir	/usr/share/horde
-%define		_appdir		%{hordedir}/%{name}
 %define		_sysconfdir	/etc/horde.org
+%define		_appdir		%{hordedir}/%{_hordeapp}
 
 %description
 Kronolith is the Horde calendar application. It provides a stable and
