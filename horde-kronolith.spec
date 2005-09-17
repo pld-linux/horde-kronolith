@@ -6,7 +6,7 @@
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
 Summary(pl):	Kronolith - kalendarz dla Horde
-Name:		%{_hordeapp}
+Name:		horde-%{_hordeapp}
 Version:	2.0.4
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	LGPL
@@ -23,6 +23,7 @@ Requires:	apache >= 1.3.33-2
 Requires:	apache(mod_access)
 Requires:	horde >= 3.0
 Requires:	php-xml >= 3:4.1.0
+Obsoletes:	%{_hordeapp}
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -103,7 +104,7 @@ fi
 if [ "$1" = 1 ]; then
 %banner %{name} -e <<EOF
 IMPORTANT:
-If you are installing for the first time, you must now
+If you are installing Kronolith for the first time, you must now
 create the Kronolith database tables. Look into directory
 %{_docdir}/%{name}-%{version}/sql
 to find out how to do this for your database.
