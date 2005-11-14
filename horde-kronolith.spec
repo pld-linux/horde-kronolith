@@ -7,12 +7,12 @@
 Summary:	Kronolith - calendar for Horde
 Summary(pl):	Kronolith - kalendarz dla Horde
 Name:		horde-%{_hordeapp}
-Version:	2.0.4
+Version:	2.0.5
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	LGPL
 Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}.tar.gz
-# Source0-md5:	cd8553403c30c1b4907ecde3140a4023
+# Source0-md5:	cce9751c2de5ebb5ce55cb643662fd3e
 #Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
 Source1:	%{_hordeapp}.conf
 URL:		http://www.horde.org/kronolith/
