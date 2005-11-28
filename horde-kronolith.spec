@@ -1,7 +1,7 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
 #define	_rc		rc1
-%define	_rel	1
+%define	_rel	1.1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
@@ -22,6 +22,7 @@ BuildRequires:	tar >= 1:1.15.1
 Requires:	apache(mod_access)
 Requires:	horde >= 3.0
 Requires:	php-xml >= 3:4.1.0
+Requires:	webapps
 Requires:	webserver = apache
 Obsoletes:	%{_hordeapp}
 Conflicts:	apache < 1.3.33-2
@@ -33,8 +34,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	'pear(Horde.*)'
 
 %define		hordedir	/usr/share/horde
-%define		_sysconfdir	/etc/horde.org
 %define		_appdir		%{hordedir}/%{_hordeapp}
+%define		_webapps	/etc/webapps
+%define		_webapp		horde-%{_hordeapp}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 Kronolith is the Horde calendar application. It provides a stable and
@@ -74,32 +77,33 @@ tar zxf %{SOURCE0} --strip-components=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp} \
+install -d $RPM_BUILD_ROOT%{_sysconfdir} \
 	$RPM_BUILD_ROOT%{_appdir}/{docs,lib,locale,templates,themes}
 
 cp -a *.php			$RPM_BUILD_ROOT%{_appdir}
 for i in config/*.dist; do
-	cp -a $i $RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/$(basename $i .dist)
+	cp -a $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i .dist)
 done
-echo '<?php ?>' >		$RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/conf.php
-cp -p config/conf.xml	$RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/conf.xml
-touch					$RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/conf.php.bak
+echo '<?php ?>' >		$RPM_BUILD_ROOT%{_sysconfdir}/conf.php
+cp -p config/conf.xml	$RPM_BUILD_ROOT%{_sysconfdir}/conf.xml
+touch					$RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
 
 cp -pR  lib/*                   $RPM_BUILD_ROOT%{_appdir}/lib
 cp -pR  locale/*                $RPM_BUILD_ROOT%{_appdir}/locale
 cp -pR  templates/*             $RPM_BUILD_ROOT%{_appdir}/templates
 cp -pR  themes/*                $RPM_BUILD_ROOT%{_appdir}/themes
 
-ln -s %{_sysconfdir}/%{_hordeapp} $RPM_BUILD_ROOT%{_appdir}/config
+ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
 ln -s %{_docdir}/%{name}-%{version}/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{_hordeapp}.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ ! -f %{_sysconfdir}/%{_hordeapp}/conf.php.bak ]; then
-	install /dev/null -o root -g http -m660 %{_sysconfdir}/%{_hordeapp}/conf.php.bak
+if [ ! -f %{_sysconfdir}/conf.php.bak ]; then
+	install /dev/null -o root -g http -m660 %{_sysconfdir}/conf.php.bak
 fi
 
 if [ "$1" = 1 ]; then
@@ -112,27 +116,58 @@ to find out how to do this for your database.
 EOF
 fi
 
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{_hordeapp}.conf
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{_hordeapp}.conf
+%webapp_register httpd %{_webapp}
 
 %triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -- horde-%{_hordeapp} < 2.0.4-1.1
+for i in conf.php conf.xml keywords.php menu.php prefs.php; do
+	if [ -f /etc/horde.org/%{_hordeapp}/$i.rpmsave ]; then
+		mv -f %{_sysconfdir}/$i{,.rpmnew}
+		mv -f /etc/horde.org/%{_hordeapp}/$i.rpmsave %{_sysconfdir}/$i
+	fi
+done
+
+if [ -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/apache.conf{,.rpmnew}
+	mv -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+	cp -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave %{_sysconfdir}/apache.conf
+	cp -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave %{_sysconfdir}/httpd.conf
+fi
+
+if [ -L /etc/apache/conf.d/99_horde-%{_hordeapp}.conf ]; then
+	/usr/sbin/webapp register apache %{_webapp}
+	rm -f /etc/apache/conf.d/99_horde-%{_hordeapp}.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache reload 1>&2
+	fi
+fi
+if [ -L /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf ]; then
+	/usr/sbin/webapp register httpd %{_webapp}
+	rm -f /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd reload 1>&2
+	fi
+fi
 
 %files
 %defattr(644,root,root,755)
 %doc README docs/* scripts/*
-%attr(750,root,http) %dir %{_sysconfdir}/%{_hordeapp}
-%attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{_hordeapp}.conf
-%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{_hordeapp}/conf.php
-%attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/%{_hordeapp}/conf.php.bak
-%attr(640,root,http) %config(noreplace) %{_sysconfdir}/%{_hordeapp}/[!c]*.php
-%attr(640,root,http) %{_sysconfdir}/%{_hordeapp}/conf.xml
+%attr(750,root,http) %dir %{_sysconfdir}
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/httpd.conf
+%attr(660,root,http) %config(noreplace) %{_sysconfdir}/conf.php
+%attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/conf.php.bak
+%attr(640,root,http) %config(noreplace) %{_sysconfdir}/[!c]*.php
+%attr(640,root,http) %{_sysconfdir}/conf.xml
 
 %dir %{_appdir}
 %{_appdir}/*.php
