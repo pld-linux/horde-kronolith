@@ -1,19 +1,19 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
-#define	_rc		rc1
-%define	_rel	1
+%define	_rc		rc1
+#%define	_rel	1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
 Summary(pl):	Kronolith - kalendarz dla Horde
 Name:		horde-%{_hordeapp}
-Version:	2.0.6
+Version:	2.1
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	LGPL
 Group:		Applications/WWW
-Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}.tar.gz
-# Source0-md5:	c0c6bad037911ef689bc4f4da5be0047
-#Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
+#Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}.tar.gz
+Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
+# Source0-md5:	24aaabaa4880be0e858e02f030fb1c41
 Source1:	%{_hordeapp}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
