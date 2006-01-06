@@ -1,7 +1,7 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
 %define	_rc		rc1
-#%define	_rel	1
+%define	_rel	1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
