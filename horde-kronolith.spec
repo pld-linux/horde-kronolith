@@ -1,7 +1,7 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
 %define	_rc		rc1
-%define	_rel	1
+%define	_rel	1.1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
@@ -17,7 +17,7 @@ Source0:	ftp://ftp.horde.org/pub/kronolith/%{_hordeapp}-h3-%{version}-%{_rc}.tar
 Source1:	%{_hordeapp}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
-BuildRequires:	rpmbuild(macros) >= 1.264
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	tar >= 1:1.15.1
 Requires:	apache(mod_access)
 Requires:	horde >= 3.0
@@ -124,7 +124,7 @@ fi
 %triggerun -- apache >= 2.0.0
 %webapp_unregister httpd %{_webapp}
 
-%triggerpostun -- horde-%{_hordeapp} < 2.0.4-1.1
+%triggerpostun -- horde-%{_hordeapp} < 2.0.4-1.1, %{_hordeapp}
 for i in conf.php keywords.php menu.php prefs.php; do
 	if [ -f /etc/horde.org/%{_hordeapp}/$i.rpmsave ]; then
 		mv -f %{_sysconfdir}/$i{,.rpmnew}
@@ -142,16 +142,12 @@ fi
 if [ -L /etc/apache/conf.d/99_horde-%{_hordeapp}.conf ]; then
 	/usr/sbin/webapp register apache %{_webapp}
 	rm -f /etc/apache/conf.d/99_horde-%{_hordeapp}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
+	%service -q apache reload
 fi
 if [ -L /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf ]; then
 	/usr/sbin/webapp register httpd %{_webapp}
 	rm -f /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
+	%service -q httpd reload
 fi
 
 %files
