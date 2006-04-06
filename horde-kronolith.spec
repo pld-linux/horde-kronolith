@@ -72,7 +72,7 @@ PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 %setup -qcT -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
 tar zxf %{SOURCE0} --strip-components=1
 
-rm -f {,*/}.htaccess
+rm {,*/}.htaccess
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
 done
