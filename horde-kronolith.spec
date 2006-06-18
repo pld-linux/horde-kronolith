@@ -1,7 +1,7 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
 #define	_rc		rc3
-%define	_rel	1
+%define	_rel	2
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
@@ -72,7 +72,6 @@ PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 %setup -qcT -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
 tar zxf %{SOURCE0} --strip-components=1
 
-rm {,*/}.htaccess
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
 done
