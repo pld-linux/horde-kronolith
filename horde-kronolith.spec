@@ -1,7 +1,7 @@
 %define	_hordeapp kronolith
 #define	_snap	2005-08-01
 #define	_rc		rc3
-%define	_rel	1
+%define	_rel	2
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
@@ -20,7 +20,8 @@ BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	tar >= 1:1.15.1
 Requires:	horde >= 3.0
-Requires:	php-xml >= 3:4.1.0
+Requires:	php(xml)
+Requires:	php-common >= 3:4.1.0
 Requires:	webapps
 Obsoletes:	%{_hordeapp}
 BuildArch:	noarch
