@@ -5,7 +5,7 @@
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
-Summary(pl):	Kronolith - kalendarz dla Horde
+Summary(pl.UTF-8):   Kronolith - kalendarz dla Horde
 Name:		horde-%{_hordeapp}
 Version:	2.1.4
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
@@ -52,21 +52,21 @@ work with any backend, but right now we provide SQL (abstracted to
 support most databases, including MySQL, PostgreSQL, Oracle, and MSSQL
 via PEAR DB), MCAL, and Kolab backend libraries.
 
-%description -l pl
-Kronolith to kalendarz bÍd±cy aplikacj± dla Horde. Dostarcza stabilny
-system kalendarza o duøych moøliwo∂ciach dla kaødego uøytkownika Horde
-wraz ze zintegrowanymi moøliwo∂ciami wspÛ≥pracy/planowania.
+%description -l pl.UTF-8
+Kronolith to kalendarz bƒôdƒÖcy aplikacjƒÖ dla Horde. Dostarcza stabilny
+system kalendarza o du≈ºych mo≈ºliwo≈õciach dla ka≈ºdego u≈ºytkownika Horde
+wraz ze zintegrowanymi mo≈ºliwo≈õciami wsp√≥≈Çpracy/planowania.
 Intensywnie wykorzystuje szkielet Horde w celu integracji z innymi
 aplikacjami.
 
 Jak na razie Kronolith implementuje solidny, samodzielny system
-kalendarza, pozwalaj±cy na powtarzanie zdarzeÒ, zdarzenia codzienne,
-w≥asne pola, s≥owa kluczowe, wspÛ≥dzielone kalendarze, obs≥ugÍ
-iCalendar, generowanie informacji o wolnym i zajÍtym czasie oraz
-zarz±dzanie wieloma uøytkownikami poprzez uwierzytelnianie Horde. API
-kalendarza uøywane przez Kronolith jest abstrakcyjne, tak øe moøe
-dzia≥aÊ z dowolnym backendem, ale aktualnie dostarczane s± biblioteki
-backendÛw SQL (jako abstrakcja do obs≥ugi wiÍkszo∂ci baz, w tym MySQL,
+kalendarza, pozwalajƒÖcy na powtarzanie zdarze≈Ñ, zdarzenia codzienne,
+w≈Çasne pola, s≈Çowa kluczowe, wsp√≥≈Çdzielone kalendarze, obs≈Çugƒô
+iCalendar, generowanie informacji o wolnym i zajƒôtym czasie oraz
+zarzƒÖdzanie wieloma u≈ºytkownikami poprzez uwierzytelnianie Horde. API
+kalendarza u≈ºywane przez Kronolith jest abstrakcyjne, tak ≈ºe mo≈ºe
+dzia≈Çaƒá z dowolnym backendem, ale aktualnie dostarczane sƒÖ biblioteki
+backend√≥w SQL (jako abstrakcja do obs≈Çugi wiƒôkszo≈õci baz, w tym MySQL,
 PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
