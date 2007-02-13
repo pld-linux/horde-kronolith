@@ -5,7 +5,7 @@
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
-Summary(pl.UTF-8):   Kronolith - kalendarz dla Horde
+Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{_hordeapp}
 Version:	2.1.4
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
