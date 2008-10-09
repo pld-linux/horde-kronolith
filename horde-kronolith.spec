@@ -1,19 +1,15 @@
 %define		hordeapp kronolith
-#define		_snap	2005-08-01
-%define		subver	rc2
-%define		rel		1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
 Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{hordeapp}
-Version:	2.2
-Release:	%{?subver:0.%{subver}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{rel}
+Version:	2.3
+Release:	0.1
 License:	LGPL
 Group:		Applications/WWW
-#Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}.tar.gz
-Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}-%{subver}.tar.gz
-# Source0-md5:	922b11f75d22198d5bef766933a3ce00
+Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}.tar.gz
+# Source0-md5:	81500ac468942a64a8faa03063f26d10
 Source1:	%{hordeapp}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
@@ -70,8 +66,7 @@ backendów SQL (jako abstrakcja do obsługi większości baz, w tym MySQL,
 PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
-%setup -qcT -n %{?_snap:%{hordeapp}-%{_snap}}%{!?_snap:%{hordeapp}-%{version}%{?subver:-%{subver}}}
-tar zxf %{SOURCE0} --strip-components=1
+%setup -q
 
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
