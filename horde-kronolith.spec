@@ -14,7 +14,6 @@ Source1:	%{hordeapp}.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
-BuildRequires:	tar >= 1:1.15.1
 Requires:	horde >= 3.0
 Requires:	php(xml)
 Requires:	php-common >= 3:4.1.0
