@@ -64,7 +64,7 @@ backendów SQL (jako abstrakcja do obsługi większości baz, w tym MySQL,
 PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
-%setup -q
+%setup -q -n %{_hordeapp}-h3-%{version}
 
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
