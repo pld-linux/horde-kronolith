@@ -18,8 +18,8 @@ Requires:	horde >= 3.0
 Requires:	php(xml)
 Requires:	php-common >= 3:4.1.0
 Requires:	webapps
-Obsoletes:	%{hordeapp}
 Suggests:	php-pear-Date_Holidays
+Obsoletes:	kronolith
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
