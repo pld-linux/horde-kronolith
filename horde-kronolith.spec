@@ -5,7 +5,7 @@ Summary:	Kronolith - calendar for Horde
 Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{hordeapp}
 Version:	2.3
-Release:	0.1
+Release:	1
 License:	LGPL
 Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}.tar.gz
@@ -69,6 +69,9 @@ PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
 done
+
+# Described in documentation as dangerous file...
+rm test.php
 
 %install
 rm -rf $RPM_BUILD_ROOT
