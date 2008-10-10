@@ -63,7 +63,7 @@ backendów SQL (jako abstrakcja do obsługi większości baz, w tym MySQL,
 PostgreSQL, Oracle i MS SQL poprzez PEAR DB), MCAL i Kolab.
 
 %prep
-%setup -q -n %{_hordeapp}-h3-%{version}
+%setup -q -n %{hordeapp}-h3-%{version}
 
 for i in config/*.dist; do
 	mv $i config/$(basename $i .dist)
@@ -77,7 +77,7 @@ cp -a *.php $RPM_BUILD_ROOT%{_appdir}
 cp -a config/* $RPM_BUILD_ROOT%{_sysconfdir}
 echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/conf.php
 touch $RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
-cp -a lib locale templates themes $RPM_BUILD_ROOT%{_appdir}
+cp -a calendars feed js lib locale templates themes $RPM_BUILD_ROOT%{_appdir}
 cp -a docs/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
 
 ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
@@ -127,8 +127,11 @@ fi
 
 %dir %{_appdir}
 %{_appdir}/*.php
+%{_appdir}/calendars
 %{_appdir}/config
 %{_appdir}/docs
+%{_appdir}/feed
+%{_appdir}/js
 %{_appdir}/lib
 %{_appdir}/locale
 %{_appdir}/templates
