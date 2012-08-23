@@ -5,7 +5,7 @@ Summary:	Kronolith - calendar for Horde
 Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{hordeapp}
 Version:	2.3.5
-Release:	1
+Release:	2
 License:	LGPL
 Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}.tar.gz
@@ -15,8 +15,8 @@ URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	horde >= 3.1
+Requires:	php(core) >= 4.1.0
 Requires:	php(xml)
-Requires:	php-common >= 3:4.1.0
 Requires:	webapps
 Suggests:	php-pear-Date
 Suggests:	php-pear-Date_Holidays >= 0.17.1
