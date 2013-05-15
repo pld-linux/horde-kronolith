@@ -5,12 +5,13 @@ Summary:	Kronolith - calendar for Horde
 Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{hordeapp}
 Version:	2.3.5
-Release:	2
+Release:	3
 License:	LGPL
 Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/kronolith/%{hordeapp}-h3-%{version}.tar.gz
 # Source0-md5:	3305f6f2951c863b57c39d258d796ae6
-Source1:	%{hordeapp}.conf
+Source1:	%{hordeapp}-apache.conf
+Source2:	%{hordeapp}-httpd.conf
 URL:		http://www.horde.org/kronolith/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -22,6 +23,7 @@ Suggests:	php-pear-Date
 Suggests:	php-pear-Date_Holidays >= 0.17.1
 Suggests:	php-pear-XML_Serializer
 Obsoletes:	kronolith
+Conflicts:	apache-base < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -88,7 +90,7 @@ cp -a docs/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
 
 ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -114,10 +116,10 @@ fi
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %files
