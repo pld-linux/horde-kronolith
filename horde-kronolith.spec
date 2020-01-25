@@ -1,6 +1,5 @@
 %define		hordeapp kronolith
 #
-%include	/usr/lib/rpm/macros.php
 Summary:	Kronolith - calendar for Horde
 Summary(pl.UTF-8):	Kronolith - kalendarz dla Horde
 Name:		horde-%{hordeapp}
